@@ -1,0 +1,79 @@
+/* src/App.css */
+body {
+  background-image: url('C:\\xampp\\htdocs\\cse470_project\\cse470_frontend\\public\\1000_F_198506301_zS7IDI4YU7kW0zFVagjTwl8AVI7lZvjP.jpg'); /* Path to your background image */
+  background-size: cover; /* Ensures the image covers the entire background */
+  background-repeat: no-repeat; /* Prevents the image from repeating */
+  background-position: center; /* Centers the background image */
+  background-attachment: fixed; /* Fixes the background image in place */
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  color: #ffffff; /* Adjust text color for better visibility on the background */
+}
+
+.App {
+  text-align: center;
+  padding: 20px;
+}
+
+header {
+  display: flex;
+  align-items: center; /* Vertically aligns elements */
+  position: relative; /* Allows positioning for centering */
+  padding: 5px 10px;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 2.5em;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%); /* Centers the text horizontally */
+  text-align: center;
+}
+
+.staff-login {
+  margin-left: auto; /* Pushes the button to the far right */
+  font-size: 1em; /* Smaller than the main button */
+  padding: 10px 20px; /* Adjust padding for a smaller button */
+  background-color: #4CAF50; /* A distinct, cool color */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transition for hover effect */
+}
+
+.staff-login:hover {
+  background-color: #45a049; /* Darken the button color on hover */
+  transform: scale(1.05); /* Slightly enlarge the button on hover */
+}
+
+.staff-login:active {
+  background-color: #39903d; /* Darken further when clicked */
+}
+
+h1 {
+  margin: 20px 0;
+  font-size: 2.5em;
+}
+
+button {
+  font-size: 1.5em; /* Make the button text larger */
+  padding: 15px 30px; /* Increase padding for a larger button */
+  background-color: #825149; /* Use a cool color for the background */
+  color: white; /* Set text color to white */
+  border: none; /* Remove default border */
+  border-radius: 8px; /* Add rounded corners */
+  cursor: pointer; /* Change cursor to pointer on hover */
+  transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transition for hover effect */
+}
+
+button:hover {
+  background-color: #73453e; /* Darken the button color on hover */
+  transform: scale(1.1); /* Slightly enlarge the button on hover */
+}
+
+button:active {
+  background-color: #5c3831; /* Darken further when clicked */
+}

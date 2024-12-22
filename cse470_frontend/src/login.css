@@ -1,0 +1,79 @@
+/* src/Login.css */
+.Login {
+    text-align: center;
+    padding: 20px;
+}
+
+.Login h1 {
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+.Login form {
+    display: inline-block;
+    text-align: left;
+}
+
+.Login label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.Login input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+
+.Login button {
+    padding: 10px 20px;
+    font-size: 1em;
+    background-color: #4CAF50; /* Green background for the default login button */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.Login button:hover {
+    background-color: #45a049; /* Darker green on hover for the default button */
+}
+
+/* Adjust the spacing for Forgot Password */
+.forgot-password {
+    margin-top: 5px; /* Decreases the space above the Forgot Password button */
+}
+
+.forgot-password button {
+    color: white;
+    font-size: 10px; /* Small font size */
+    padding: 4px 8px; /* Smaller padding */
+    background-color: red; /* Red background */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor */
+    text-decoration: none; /* No underline */
+}
+
+.forgot-password button:hover {
+    background-color: darkred; /* Darker red on hover */
+}
+
+.signup-message {
+    text-align: center;
+    margin-top: 15px;
+    color: white;
+    font-size: 18px;
+}
+
+.signup-link {
+    color: white;
+    text-decoration: underline;
+    font-weight: bold;
+}
+
+.signup-link:hover {
+    text-decoration: none;
+    cursor: pointer;
+}

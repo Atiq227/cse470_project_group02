@@ -1,0 +1,20 @@
+/* src/slide.css */
+.slideshow-container {
+    width: 80%;
+    max-width: 960px;
+    margin: 0 auto;
+    overflow: hidden;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.slide {
+    display: inline-block;
+    width: 100%;
+}
+
+.slide img { /* Updated to match the correct selector */
+    width: 100%;
+    height: 320px; /* Ensure height is explicitly set */
+    object-fit: cover; /* Maintain aspect ratio while cropping */
+}
