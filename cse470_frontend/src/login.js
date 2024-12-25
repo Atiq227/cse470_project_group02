@@ -11,8 +11,8 @@ function Login() {
             <h1>Please log in</h1>
             <form>
                 <label>
-                    Username:
-                    <input type="text" name="username" />
+                    Email:
+                    <input type="text" name="email" />
                 </label>
                 <br />
                 <label>
