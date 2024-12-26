@@ -1,0 +1,38 @@
+body {
+    background-color: #f0f0f0; /* Change this to your desired background color */
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    display: flex; /* Flexbox for alignment */
+    flex-direction: column; /* Stack elements vertically */
+    align-items: center; /* Horizontally center items */
+    justify-content: center; /* Vertically center items */
+    height: 100vh; /* Full viewport height for centering */
+    text-align: center; /* Center text */
+}
+
+h2 {
+    margin-bottom: 20px; /* Space below heading */
+}
+
+.login-options-button {
+    margin: 10px; /* Space between buttons */
+    padding: 15px 30px; /* Adjust button size */
+    font-size: 18px; /* Increase font size */
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+    background-color: #4CAF50; /* Button background color */
+    color: white; /* Text color */
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth hover effect */
+}
+
+.login-options-button:hover {
+    background-color: #45a049; /* Darker green on hover */
+    transform: scale(1.1); /* Slightly enlarge on hover */
+}
+
+.login-options-button:active {
+    background-color: #39903d; /* Even darker green when clicked */
+}
