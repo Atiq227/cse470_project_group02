@@ -5,6 +5,9 @@ import './App.css';
 import Login from './login'; // Import your Login component
 import Signup from './signup'; // Import your Signup component
 
+import ChefDashboard from "./components/ChefDashboard";
+import "./styles.css";
+
 function App() {
     return (
         <Router>
@@ -38,5 +41,15 @@ function HomePage() {
         </div>
     );
 }
+
+const App = () => {
+  return (
+    <div>
+      <h1>Cafeteria Management System</h1>
+      <ChefDashboard />
+    </div>
+  );
+};
+
 
 export default App;
