@@ -2,21 +2,22 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Slideshow from './slide';
 import './App.css';
-import Login from './login'; // Import your Login component
-import Signup from './signup'; // Import your Signup component
+import Login from './login';
+import Signup from './signup';
 import CustomerHome from './customerhome';
+import Menu from './menu';
+import OrderConfirmation from './orderConfirmation'; // Import OrderConfirmation component
+
 function App() {
     return (
         <Router>
             <Routes>
-                {/* Route for the homepage */}
                 <Route path="/" element={<HomePage />} />
-                {/* Route for the login page */}
                 <Route path="/login" element={<Login />} />
-                {/* Route for the signup page */}
                 <Route path="/signup" element={<Signup />} />
-                {/* Route for the customer home page */}
                 <Route path="/customerhome" element={<CustomerHome />} />
+                <Route path="/menu" element={<Menu />} />
+                <Route path="/order-confirmation" element={<OrderConfirmation />} /> {/* Add this route */}
             </Routes>
         </Router>
     );

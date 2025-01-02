@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ItemController;
+use App\Http\Controllers\OrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,3 +22,9 @@ Route::post('register', [UserController::class, 'register']);
 
 // User login route
 Route::post('login', [UserController::class, 'login']);
+
+// Menu items route
+Route::get('/items', [ItemController::class, 'index']);
+
+// Place order route
+Route::post('/place-order', [OrderController::class, 'store']);
