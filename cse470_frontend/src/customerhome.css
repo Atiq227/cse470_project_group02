@@ -1,0 +1,9 @@
+.CustomerHome {
+    text-align: center;
+    padding: 20px;
+}
+
+.CustomerHome h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
