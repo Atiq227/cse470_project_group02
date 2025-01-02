@@ -4,7 +4,7 @@ import Slideshow from './slide';
 import './App.css';
 import Login from './login'; // Import your Login component
 import Signup from './signup'; // Import your Signup component
-
+import CustomerHome from './customerhome';
 function App() {
     return (
         <Router>
@@ -15,6 +15,8 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 {/* Route for the signup page */}
                 <Route path="/signup" element={<Signup />} />
+                {/* Route for the customer home page */}
+                <Route path="/customerhome" element={<CustomerHome />} />
             </Routes>
         </Router>
     );
@@ -34,7 +36,6 @@ function HomePage() {
                     <button>Want to order something?</button>
                 </Link>
             </h1>
-            {/* Removed the signup button */}
         </div>
     );
 }
