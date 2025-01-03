@@ -11,27 +11,27 @@ const CustomerHome = () => {
         {
             title: 'View Menu',
             description: 'Browse our food menu',
-            onClick: () => navigate('/menu')
+            onClick: () => navigate('/menu', { state: { customerName } })
         },
         {
             title: 'Previous Orders',
             description: 'View your order history',
-            onClick: () => navigate('/orders')
+            onClick: () => navigate('/previousorders', { state: { customerName } })
         },
         {
             title: 'Credit Balance',
             description: 'Check your available credit',
-            onClick: () => navigate('/credit')
+            onClick: () => navigate('/credit', { state: { customerName } })
         },
         {
             title: 'Favourite Items',
             description: 'View your saved favorites',
-            onClick: () => navigate('/favorites')
+            onClick: () => navigate('/favorites', { state: { customerName } })
         },
         {
             title: 'View Profile',
             description: 'Manage your account details',
-            onClick: () => navigate('/profile')
+            onClick: () => navigate('/customerprofile', { state: { customerName } })
         }
     ];
 

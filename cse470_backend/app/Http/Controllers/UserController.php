@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use App\Models\User; // Add this line to import the User model
+use App\Models\User;
 
 class UserController extends Controller
 {
@@ -101,24 +102,72 @@ class UserController extends Controller
             ], 401);
         }
 
-        // Retrieve customer name from the `customer` table
+        // Store session
+        
+
+        // Fetch customer details from the customer table
         $customer = DB::table('customer')
             ->where('customer_user_id', $user->user_id)
             ->first();
-        
         $customerName = $customer ? $customer->customer_name : 'Customer';
-
-        $token = $user->createToken('UserLogin')->accessToken;
-
+        
+        session(['user_id' => $user->user_id, 'user_email' => $user->email, 'customer_name' => $customerName]);        
+        
         return response()->json([
             'status' => 'success',
             'message' => 'Login successful',
             'user' => [
                 'id' => $user->user_id,
                 'email' => $user->email,
-                'customerName' => $customerName,
-            ],
-            'token' => $token,
+                'customerName' => $customer->customer_name ?? null, // Assuming 'customer_name' is the column name
+            ]
+        ]);
+    }
+
+    // Method for user logout
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Logout successful',
         ], 200);
+    }
+
+    // Protected profile method
+    public function profile()
+    {
+        if (!session('user_id')) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Unauthorized access'
+            ], 401);
+        }
+
+        $user = DB::table('user')
+            ->join('customer', 'user.user_id', '=', 'customer.customer_user_id')
+            ->where('user.user_id', session('user_id'))
+            ->select('user.*', 'customer.customer_name', 'customer.customer_contact')
+            ->first();
+
+        if (!$user) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'User not found'
+            ], 404);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'user' => [
+                'id' => $user->user_id,
+                'email' => $user->email,
+                'customerName' => $user->customer_name,
+                'contactNumber' => $user->customer_contact
+            ]
+        ]);
     }
 }
