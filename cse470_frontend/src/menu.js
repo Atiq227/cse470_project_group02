@@ -9,6 +9,11 @@ const Menu = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const customerName = location.state?.customerName || 'Customer';
+    const customerId = location.state?.customerId;
+    const contactNumber = location.state?.contactNumber;
+    const email = location.state?.email;
+    const credit = location.state?.credit;
+    console.log(customerName, customerId, contactNumber, email, credit);
 
     useEffect(() => {
         fetchMenuItems();
@@ -51,9 +56,10 @@ const Menu = () => {
                 },
                 body: JSON.stringify({
                     items: itemNames,
+                    customer_id: customerId, // Ensure customerId is included here
                     staff_id: 1,
                     chef_id: 1,
-                    amount: totalAmount,
+                    amount: totalAmount, // Ensure amount is included here
                     payment_method: 'Cash',
                     status: 1
                 })
@@ -70,7 +76,7 @@ const Menu = () => {
                 alert('Order created successfully!');
                 setCart([]);
                 setShowCart(false);
-                navigate('/order-confirmation', { state: { orderId: data.order_id, customerName } });
+                navigate('/order-confirmation', { state: { orderId: data.order_id, customerName, customerId, creditsEarned: data.credits_earned, contactNumber, email, credit: credit + data.credits_earned } });
             } else {
                 alert('Failed to create order: ' + data.message);
             }
@@ -90,8 +96,11 @@ const Menu = () => {
             </button>
 
             <h1>Our Menu</h1>
+            <div className="credit-notice">
+                <p>If your order minimum of ৳500 you will get 100 credits</p>
+            </div>
             <nav className="menu-nav">
-                <button onClick={() => navigate('/customerhome', { state: { customerName } })}>Back to Home</button>
+                <button onClick={() => navigate('/customerhome', { state: { customerName, customerId, contactNumber, email, credit } })}>Back to Home</button>
             </nav>
 
             <div className="menu-grid">

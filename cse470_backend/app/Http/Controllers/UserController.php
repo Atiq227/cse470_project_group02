@@ -102,24 +102,32 @@ class UserController extends Controller
             ], 401);
         }
 
-        // Store session
-        
-
         // Fetch customer details from the customer table
         $customer = DB::table('customer')
             ->where('customer_user_id', $user->user_id)
             ->first();
         $customerName = $customer ? $customer->customer_name : 'Customer';
-        
-        session(['user_id' => $user->user_id, 'user_email' => $user->email, 'customer_name' => $customerName]);        
-        
+        $customerId = $customer ? $customer->customer_id : null;
+        $customerContact = $customer ? $customer->customer_contact : null;
+        $customerCredit= $customer ? $customer->credit : null;
+        // Log customer details for debugging
+        \Log::info('Customer Details:', [
+            'customer' => $customer,
+            'customerId' => $customerId
+        ]);
+
+        session(['user_id' => $user->user_id, 'user_email' => $user->email, 'customer_name' => $customerName, 'customer_id' => $customerId, 'customer_contact' => $customerContact, 'customer_credit' => $customerCredit]);
+
         return response()->json([
             'status' => 'success',
             'message' => 'Login successful',
             'user' => [
                 'id' => $user->user_id,
                 'email' => $user->email,
-                'customerName' => $customer->customer_name ?? null, // Assuming 'customer_name' is the column name
+                'customerName' => $customerName,
+                'customerId' => $customerId,
+                'contactNumber' => $customerContact,
+                'credit' => $customerCredit
             ]
         ]);
     }

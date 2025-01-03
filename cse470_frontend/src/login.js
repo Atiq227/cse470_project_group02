@@ -31,7 +31,13 @@ function Login() {
             if (response.ok) {
                 setStatus({ success: true, error: '' });
                 navigate('/customerhome', { 
-                    state: { customerName: data.user.customerName } 
+                    state: { 
+                    customerName: data.user.customerName, 
+                    customerId: data.user.customerId,
+                    contactNumber: data.user.contactNumber,
+                    email: data.user.email,
+                    credit: data.user.credit
+                    } 
                 });
             } else {
                 setStatus({ success: false, error: data.message || 'Login failed' });
