@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import './menu.css';
 
 const Menu = () => {
@@ -7,6 +7,8 @@ const Menu = () => {
     const [cart, setCart] = useState([]);
     const [showCart, setShowCart] = useState(false);
     const navigate = useNavigate();
+    const location = useLocation();
+    const customerName = location.state?.customerName || 'Customer';
 
     useEffect(() => {
         fetchMenuItems();
@@ -68,7 +70,7 @@ const Menu = () => {
                 alert('Order created successfully!');
                 setCart([]);
                 setShowCart(false);
-                navigate('/order-confirmation', { state: { orderId: data.order_id } });
+                navigate('/order-confirmation', { state: { orderId: data.order_id, customerName } });
             } else {
                 alert('Failed to create order: ' + data.message);
             }
@@ -89,7 +91,7 @@ const Menu = () => {
 
             <h1>Our Menu</h1>
             <nav className="menu-nav">
-                <button onClick={() => navigate('/customerhome')}>Back to Home</button>
+                <button onClick={() => navigate('/customerhome', { state: { customerName } })}>Back to Home</button>
             </nav>
 
             <div className="menu-grid">
