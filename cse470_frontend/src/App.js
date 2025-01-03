@@ -1,14 +1,25 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Slideshow from './slide';
 import './App.css';
 import Login from './login'; // Import your Login component
 import Signup from './signup'; // Import your Signup component
-
 import ChefDashboard from "./components/ChefDashboard";
 import "./styles.css";
+import api from './api';
 
 function App() {
+    useEffect(() => {
+        // Example API call to fetch data
+        api.get('/food-items')
+            .then(response => {
+                console.log(response.data);
+            })
+            .catch(error => {
+                console.error('There was an error fetching the food items!', error);
+            });
+    }, []);
+
     return (
         <Router>
             <Routes>
@@ -18,6 +29,8 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 {/* Route for the signup page */}
                 <Route path="/signup" element={<Signup />} />
+                {/* Route for the chef dashboard */}
+                <Route path="/chef-dashboard" element={<ChefDashboard />} />
             </Routes>
         </Router>
     );
@@ -41,15 +54,5 @@ function HomePage() {
         </div>
     );
 }
-
-const App = () => {
-  return (
-    <div>
-      <h1>Cafeteria Management System</h1>
-      <ChefDashboard />
-    </div>
-  );
-};
-
 
 export default App;

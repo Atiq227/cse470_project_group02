@@ -4,6 +4,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ChefController;
+use App\Http\Controllers\FoodItemController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\NotificationController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -18,6 +22,7 @@ use App\Http\Controllers\ChefController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
 Route::post('register', [UserController::class, 'register']);
 
 Route::post('/menu/add', [ChefController::class, 'addMenu']);
@@ -26,5 +31,13 @@ Route::delete('/menu/item/remove/{id}', [ChefController::class, 'removeFoodItem'
 Route::post('/order/{id}/accept', [ChefController::class, 'acceptOrder']);
 Route::post('/order/{id}/decline', [ChefController::class, 'declineOrder']);
 Route::post('/notify', [ChefController::class, 'sendNotification']);
-Route::get('/homepage', [ChefController::class, 'homepage']);
+
+Route::post('/food-items', [FoodItemController::class, 'store']); // Add food item
+Route::delete('/food-items/{id}', [FoodItemController::class, 'destroy']); // Remove food item
+
+Route::post('/orders/{id}/accept', [OrderController::class, 'accept']); // Accept order
+Route::post('/orders/{id}/decline', [OrderController::class, 'decline']); // Decline order
+
+Route::post('/notifications', [NotificationController::class, 'store']); // Send notification
+
 
