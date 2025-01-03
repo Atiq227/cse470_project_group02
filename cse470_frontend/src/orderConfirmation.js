@@ -1,20 +1,19 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import './orderConfirmation.css';
 
 const OrderConfirmation = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const { orderId } = location.state || {};
-
+    const { orderId, customerId, customerName, creditsEarned, contactNumber, email, credit } = location.state || {};
+    console.log(orderId, customerId, customerName, creditsEarned, contactNumber, email, credit);
     return (
         <div className="order-confirmation">
-            <h1>Order Confirmation</h1>
-            {orderId ? (
-                <p>Your order has been placed successfully! Your order ID is {orderId}.</p>
-            ) : (
-                <p>There was an issue with your order. Please try again.</p>
-            )}
-            <button onClick={() => navigate('/menu')}>Back to Menu</button>
+            <h2>Order Confirmation</h2>
+            <p>Thank you, {customerName}, for your order!</p>
+            <p>Your order ID is: {orderId}</p>
+            <p>You have earned {creditsEarned} credits with this order.</p>
+            <button onClick={() => navigate('/menu', { state: { customerName, customerId, contactNumber, email, credit } })}>Back</button>
         </div>
     );
 };

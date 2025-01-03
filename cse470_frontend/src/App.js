@@ -6,7 +6,9 @@ import Login from './login';
 import Signup from './signup';
 import CustomerHome from './customerhome';
 import Menu from './menu';
-import OrderConfirmation from './orderConfirmation'; // Import OrderConfirmation component
+import OrderConfirmation from './orderConfirmation';
+import CustomerProfile from './customerprofile';
+import Credit from './credit';
 
 function App() {
     return (
@@ -17,7 +19,9 @@ function App() {
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/customerhome" element={<CustomerHome />} />
                 <Route path="/menu" element={<Menu />} />
-                <Route path="/order-confirmation" element={<OrderConfirmation />} /> {/* Add this route */}
+                <Route path="/order-confirmation" element={<OrderConfirmation />} />
+                <Route path="/customerprofile" element={<CustomerProfile />} />
+                <Route path="/credit" element={<Credit />} />
             </Routes>
         </Router>
     );
