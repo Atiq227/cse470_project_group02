@@ -1,12 +1,11 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import Slideshow from './slide';
+import Slideshow from './slide'; // Ensure this is your slideshow component
 import './App.css';
-import Login from './login'; // Import your Login component
-import Signup from './signup'; // Import your Signup component
-import ChefDashboard from "./components/ChefDashboard";
-import "./styles.css";
-import api from './api';
+import Login from './login'; // Ensure correct path to your Login component
+import Signup from './signup'; // Ensure correct path to your Signup component
+import ChefDashboard from './components/ChefDashboard'; // Corrected import for ChefDashboard
+import api from './api'; // Ensure correct path to your API file
 
 function App() {
     useEffect(() => {
@@ -41,7 +40,7 @@ function HomePage() {
     return (
         <div className="App">
             <header>
-                <h1>Welcome to xyz Cafeteria</h1>
+                <h1>Welcome to XYZ Cafeteria</h1>
                 <button className="staff-login">Staff Login</button>
             </header>
             <Slideshow />
@@ -50,7 +49,6 @@ function HomePage() {
                     <button>Want to order something?</button>
                 </Link>
             </h1>
-            {/* Removed the signup button */}
         </div>
     );
 }

@@ -1,33 +1,63 @@
-// src/Login.js
-import React from 'react';
-import { useNavigate } from 'react-router-dom'; // Import for navigation
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import './login.css'; // Ensure this file exists and the name matches
 
-function Login() {
+const Login = () => {
     const navigate = useNavigate(); // Hook for navigation
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await axios.post('http://127.0.0.1:8000/api/login', {
+                email,
+                password,
+            });
+
+            localStorage.setItem('token', response.data.token);
+            alert('Login successful!');
+            navigate('/chef-dashboard'); // Navigate to the chef dashboard after successful login
+        } catch (err) {
+            setError(err.response.data.error || 'Login failed');
+        }
+    };
 
     return (
         <div className="Login">
             <h1>Please log in</h1>
-            <form>
+            {error && <p style={{ color: 'red' }}>{error}</p>}
+            <form onSubmit={handleLogin}>
                 <label>
                     Email:
-                    <input type="text" name="email" />
+                    <input
+                        type="email"
+                        name="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                    />
                 </label>
                 <br />
                 <label>
                     Password:
-                    <input type="password" name="password" />
+                    <input
+                        type="password"
+                        name="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
                 </label>
                 <p className="forgot-password">
-                <button 
-                    onClick={(e) => {
-                        e.preventDefault();
-                        // Handle forgot password functionality here
-                    }}
-                >
-                    Forgot Password?
-                </button>
+                    <button
+                        onClick={(e) => {
+                            e.preventDefault();
+                            // Handle forgot password functionality here
+                        }}
+                    >
+                        Forgot Password?
+                    </button>
                 </p>
                 <button type="submit">Login</button>
             </form>
@@ -46,6 +76,6 @@ function Login() {
             </p>
         </div>
     );
-}
+};
 
 export default Login;

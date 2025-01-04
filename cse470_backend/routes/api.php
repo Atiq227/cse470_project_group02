@@ -7,6 +7,7 @@ use App\Http\Controllers\ChefController;
 use App\Http\Controllers\FoodItemController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +26,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('register', [UserController::class, 'register']);
 
+Route::post('/login', [AuthController::class, 'login']);
+
 Route::post('/menu/add', [ChefController::class, 'addMenu']);
 Route::post('/menu/item/add', [ChefController::class, 'addFoodItem']);
 Route::delete('/menu/item/remove/{id}', [ChefController::class, 'removeFoodItem']);
@@ -39,5 +42,4 @@ Route::post('/orders/{id}/accept', [OrderController::class, 'accept']); // Accep
 Route::post('/orders/{id}/decline', [OrderController::class, 'decline']); // Decline order
 
 Route::post('/notifications', [NotificationController::class, 'store']); // Send notification
-
 
