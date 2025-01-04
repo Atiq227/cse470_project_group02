@@ -5,27 +5,23 @@ import './customerhome.css';
 const CustomerHome = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const customerName = location.state?.customerName || 'Customer';
-    const customerId = location.state?.customerId;
-    const contactNumber = location.state?.contactNumber;
-    const email = location.state?.email;
-    const credit = location.state?.credit;
-    console.log(customerName, customerId, contactNumber, email, credit);
+    const { customerName, customerId, contactNumber, email, credit } = location.state || {};
+
     const actionCards = [
         {
-            title: 'View Menu',
-            description: 'Browse our food menu',
+            title: 'Order Food',
+            description: 'Browse our menu and place an order',
             onClick: () => navigate('/menu', { state: { customerName, customerId, contactNumber, email, credit } })
         },
         {
             title: 'Previous Orders',
             description: 'View your order history',
-            onClick: () => navigate('/previousorders', { state: { customerName, customerId, contactNumber, email, credit } })
+            onClick: () => navigate('/previous-orders', { state: { customerName, customerId, contactNumber, email, credit } })
         },
         {
-            title: 'Credit Balance',
-            description: 'Check your available credit',
-            onClick: () => navigate('/credit', { state: { customerName, customerId, contactNumber, email, credit } })
+            title: 'Credit',
+            description: 'View your credit balance',
+            onClick: () => navigate('/credit', { state: { customerId, customerName, contactNumber, email, credit } })
         },
         {
             title: 'Favourite Items',
@@ -53,6 +49,17 @@ const CustomerHome = () => {
                         <p>{card.description}</p>
                     </div>
                 ))}
+            </div>
+            <div className="logout-container">
+                <button 
+                    onClick={() => {
+                        alert('Logged out');
+                        navigate('/login');
+                    }} 
+                    className="logout-button"
+                >
+                    Logout
+                </button>
             </div>
         </div>
     );

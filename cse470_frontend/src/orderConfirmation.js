@@ -13,6 +13,7 @@ const OrderConfirmation = () => {
             <p>Thank you, {customerName}, for your order!</p>
             <p>Your order ID is: {orderId}</p>
             <p>You have earned {creditsEarned} credits with this order.</p>
+            <button onClick={() => navigate('/customer-review', { state: { orderId,customerName, customerId, contactNumber, email, credit } })}>Do you want to review?</button>
             <button onClick={() => navigate('/menu', { state: { customerName, customerId, contactNumber, email, credit } })}>Back</button>
         </div>
     );

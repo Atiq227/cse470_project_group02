@@ -28,3 +28,9 @@ Route::get('/items', [ItemController::class, 'index']);
 
 // Place order route
 Route::post('/place-order', [OrderController::class, 'store']);
+
+Route::get('/previous-orders/{customerId}', [OrderController::class, 'getPreviousOrders']);
+
+Route::post('/submit-review', [OrderController::class, 'submitReview']);
+
+Route::post('/logout', [UserController::class, 'logout']);
