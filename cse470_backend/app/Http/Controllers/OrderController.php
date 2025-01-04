@@ -26,7 +26,7 @@ class OrderController extends Controller
                 'feedback_comment' => ''
             ]);
 
-            // Calculate credits based on order amount
+            // Calculating credits based on order amount
             $amount = $request->amount;
             $creditsToAdd = round(($amount / 500) * 100);
             
