@@ -45,6 +45,7 @@ class UserController extends Controller
                 'customer_user_id' => $userId,
                 'customer_name' => $request->customerName,
                 'customer_contact' => $request->contactNumber,
+                'credit' => 0
             ]);
 
             DB::commit();

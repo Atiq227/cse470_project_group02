@@ -9,6 +9,8 @@ import Menu from './menu';
 import OrderConfirmation from './orderConfirmation';
 import CustomerProfile from './customerprofile';
 import Credit from './credit';
+import PreviousOrders from './PreviousOrders';
+import CustomerReview from './customerreview';
 
 function App() {
     return (
@@ -22,6 +24,8 @@ function App() {
                 <Route path="/order-confirmation" element={<OrderConfirmation />} />
                 <Route path="/customerprofile" element={<CustomerProfile />} />
                 <Route path="/credit" element={<Credit />} />
+                <Route path="/previous-orders" element={<PreviousOrders />} />
+                <Route path="/customer-review" element={<CustomerReview />} />
             </Routes>
         </Router>
     );
