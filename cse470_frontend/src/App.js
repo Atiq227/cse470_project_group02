@@ -1,25 +1,57 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Slideshow from './slide';
 import './App.css';
-import Login from './login'; // Import your Login component
-import Signup from './signup'; // Import your Signup component
-import LoginOptions from './LoginOptions'; // Import LoginOptions component
-import AdminLogin from './AdminLogin';
+import Login from './login';
+import Signup from './signup';
+import CustomerHome from './customerhome';
+import Menu from './menu';
+import OrderConfirmation from './orderConfirmation';
+import CustomerProfile from './customerprofile';
+import Credit from './credit';
+import PreviousOrders from './PreviousOrders';
+import CustomerReview from './customerreview';
+import StaffTypes from './StaffTypes';
+import StaffLogin from './StaffLogin';
+import StaffSignup from './StaffSignup';
+import StaffHome from './staffhome';
+import StaffMenu from './staffmenu';
+import StaffProfile from './StaffProfile';
+import OrderHistory from './OrderHistory';
+import StaffLeave from './StaffLeave';
+import StaffComplaint from './StaffComplaint';
+import StaffTasks from './StaffTasks';
+import FavoriteItems from './FavoriteItems';
+import FavOrderConfirmation from './favorderConfirmation';
+
+
+
 function App() {
     return (
         <Router>
             <Routes>
-                {/* Route for the homepage */}
                 <Route path="/" element={<HomePage />} />
-                {/* Route for the login page */}
                 <Route path="/login" element={<Login />} />
-                {/* Route for the signup page */}
                 <Route path="/signup" element={<Signup />} />
-                {/* Route for the login options page */}
-                <Route path="/login-options" element={<LoginOptions />} />
-                {/* Route for the admin login options page */}
-                <Route path="/admin-login" element={<AdminLogin />} />
+                <Route path="/customerhome" element={<CustomerHome />} />
+                <Route path="/menu" element={<Menu />} />
+                <Route path="/order-confirmation" element={<OrderConfirmation />} />
+                <Route path="/customerprofile" element={<CustomerProfile />} />
+                <Route path="/credit" element={<Credit />} />
+                <Route path="/previous-orders" element={<PreviousOrders />} />
+                <Route path="/customer-review" element={<CustomerReview />} />
+                <Route path="/staff-types" element={<StaffTypes />} />
+                <Route path="/staff-login" element={<StaffLogin />} />
+                <Route path="/staff-signup" element={<StaffSignup />} />
+                <Route path="/staffhome" element={<StaffHome />} />
+                <Route path="/staffmenu" element={<StaffMenu />} />
+                <Route path="/staffprofile" element={<StaffProfile />} />
+                <Route path="/orderhistory" element={<OrderHistory />} />
+                <Route path="/staffleave" element={<StaffLeave />} />
+                <Route path="/staff-complaint" element={<StaffComplaint />} />
+                <Route path="/staff-tasks" element={<StaffTasks />} />
+                <Route path="/favorites" element={<FavoriteItems />} />
+                <Route path="/favorder-confirmation" element={<FavOrderConfirmation />} />
             </Routes>
         </Router>
     );
@@ -27,17 +59,13 @@ function App() {
 
 // HomePage component: contains the homepage content
 function HomePage() {
-    const navigate = useNavigate();
-
-    const handleStaffLogin = () => {
-        navigate('/login-options'); // Redirect to LoginOptions component
-    };
-
     return (
         <div className="App">
             <header>
                 <h1>Welcome to xyz Cafeteria</h1>
-                <button className="staff-login" onClick={handleStaffLogin}>Staff Login</button>
+                <Link to="/staff-types">
+                    <button className="staff-login">Staff Login</button>
+                </Link>
             </header>
             <Slideshow />
             <h1>

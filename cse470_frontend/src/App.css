@@ -1,6 +1,6 @@
 /* src/App.css */
 body {
-  background-image: url('C:\\xampp\\htdocs\\cse470_project\\cse470_frontend\\public\\1000_F_198506301_zS7IDI4YU7kW0zFVagjTwl8AVI7lZvjP.jpg'); /* Path to your background image */
+  background-image: url('C:\\xampp\\htdocs\\cse470_project_group02\\cse470_frontend\\public\\1000_F_198506301_zS7IDI4YU7kW0zFVagjTwl8AVI7lZvjP.jpg'); /* Path to your background image */
   background-size: cover; /* Ensures the image covers the entire background */
   background-repeat: no-repeat; /* Prevents the image from repeating */
   background-position: center; /* Centers the background image */
@@ -16,11 +16,17 @@ body {
   padding: 20px;
 }
 
+.App h1{
+  text-align: center;
+  padding: 20px;
+  color: #ffffff;
+}
+
 header {
   display: flex;
-  align-items: center; /* Vertically aligns elements */
-  position: relative; /* Allows positioning for centering */
-  padding: 5px 10px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
 }
 
 header h1 {
@@ -33,24 +39,26 @@ header h1 {
 }
 
 .staff-login {
-  margin-left: auto; /* Pushes the button to the far right */
-  font-size: 1em; /* Smaller than the main button */
-  padding: 10px 20px; /* Adjust padding for a smaller button */
-  background-color: #4CAF50; /* A distinct, cool color */
+  position: absolute;  /* Position independently */
+  right: 20px;        /* Distance from right edge */
+  top: 20px;          /* Distance from top */
+  font-size: 1em;
+  padding: 10px 20px;
+  background-color: #4CAF50;
   color: white;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transition for hover effect */
+  transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 .staff-login:hover {
-  background-color: #45a049; /* Darken the button color on hover */
-  transform: scale(1.05); /* Slightly enlarge the button on hover */
+  background-color: #45a049;
+  transform: scale(1.05);
 }
 
 .staff-login:active {
-  background-color: #39903d; /* Darken further when clicked */
+  background-color: #39903d;
 }
 
 h1 {
