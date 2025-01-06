@@ -67,6 +67,11 @@ class CustomerFavoriteController extends Controller
                 'item_id' => $validated['item_id']
             ]);
 
+            Log::info('Item added to favorites', [
+                'customer_id' => $validated['customer_id'],
+                'item_id' => $validated['item_id']
+            ]);
+
             return response()->json([
                 'success' => true,
                 'message' => 'Item added to favorites successfully',
@@ -74,6 +79,13 @@ class CustomerFavoriteController extends Controller
             ], 201);
 
         } catch (QueryException $e) {
+            if ($e->getCode() == 23000) { // Integrity constraint violation
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Item is already in the favorites'
+                ], 409);
+            }
+
             Log::error('Database error:', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
