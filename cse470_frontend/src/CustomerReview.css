@@ -7,9 +7,16 @@
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
+
+.customer-review h1 {
+    text-align: center;
+    color: #0e0e0e;
+    margin-bottom: 30px;
+}
+
 h1 {
     text-align: center;
-    color: #333;
+    color: #0e0e0e;
     margin-bottom: 30px;
 }
 
