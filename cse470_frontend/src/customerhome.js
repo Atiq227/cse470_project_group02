@@ -26,7 +26,7 @@ const CustomerHome = () => {
         {
             title: 'Favourite Items',
             description: 'View your saved favorites',
-            onClick: () => navigate('/favorites', { state: { customerName, contactNumber, email, credit } })
+            onClick: () => navigate('/favorites', { state: {customerId, customerName, contactNumber, email, credit } })
         },
         {
             title: 'View Profile',
@@ -38,6 +38,7 @@ const CustomerHome = () => {
     return (
         <div className="CustomerHome">
             <h1>Welcome {customerName}</h1>
+            <p>Your customer ID is: {customerId}</p>
             <div className="actions-grid">
                 {actionCards.map((card, index) => (
                     <div 

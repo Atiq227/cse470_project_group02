@@ -26,11 +26,9 @@ class OrderController extends Controller
                 'feedback_comment' => ''
             ]);
 
-            // Calculate credits based on order amount
             $amount = $request->amount;
             $creditsToAdd = round(($amount / 500) * 100);
             
-            // Add credits for all order amounts
             DB::table('customer')
                 ->where('customer_id', $request->customer_id)
                 ->increment('credit', $creditsToAdd);
@@ -59,13 +57,9 @@ class OrderController extends Controller
                 ->get();
 
             $detailedOrders = $orders->map(function ($order) {
-                // Double decode to handle the double-encoded JSON
-                $itemsString = json_decode($order->items);
-                $items = json_decode($itemsString);
-
                 return [
                     'order_id' => $order->order_id,
-                    'items' => $items ?: [],
+                    'items' => json_decode($order->items),
                     'amount' => $order->amount
                 ];
             });
@@ -83,6 +77,7 @@ class OrderController extends Controller
             ], 500);
         }
     }
+
     public function submitReview(Request $request)
     {
         try {
@@ -108,6 +103,48 @@ class OrderController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => 'Failed to submit review'
+            ], 500);
+        }
+    }
+
+    public function getStaffOrderHistory($staffId)
+    {
+        try {
+            Log::info('Fetching orders for staff ID: ' . $staffId);
+
+            $orders = DB::table('order_table')
+                ->where('staff_id', $staffId)
+                ->get();
+
+            $detailedOrders = $orders->map(function ($order) {
+                $customer = DB::table('customer')
+                    ->where('customer_id', $order->customer_id)
+                    ->first();
+
+                $items = json_decode($order->items, true);
+                if (is_string($items)) {
+                    $items = json_decode($items, true);
+                }
+
+                return [
+                    'order_id' => $order->order_id,
+                    'customer_id' => $order->customer_id,
+                    'customer_name' => $customer ? $customer->customer_name : 'Unknown',
+                    'items' => $items,
+                    'amount' => $order->amount
+                ];
+            });
+
+            return response()->json([
+                'status' => 'success',
+                'orders' => $detailedOrders
+            ], 200);
+
+        } catch (\Exception $e) {
+            Log::error('Failed to fetch staff orders: ' . $e->getMessage());
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Failed to fetch staff orders: ' . $e->getMessage()
             ], 500);
         }
     }
