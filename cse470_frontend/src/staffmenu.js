@@ -1,19 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import './menu.css';
+import './staffmenu.css';
 
-const Menu = () => {
+const StaffMenu = () => {
     const [items, setItems] = useState([]);
     const [cart, setCart] = useState([]);
     const [showCart, setShowCart] = useState(false);
+    const [customerId, setCustomerId] = useState('');
+    const [customerIdError, setCustomerIdError] = useState('');
+    const [customerData, setCustomerData] = useState(null);
     const navigate = useNavigate();
     const location = useLocation();
-    const customerName = location.state?.customerName || 'Customer';
-    const customerId = location.state?.customerId;
-    const contactNumber = location.state?.contactNumber;
-    const email = location.state?.email;
-    const credit = location.state?.credit;
-    console.log(customerName, customerId, contactNumber, email, credit);
+    const { staffName, staffId, contactNumber, email } = location.state || {};
 
     useEffect(() => {
         fetchMenuItems();
@@ -22,10 +20,54 @@ const Menu = () => {
     const fetchMenuItems = async () => {
         try {
             const response = await fetch('http://localhost:8000/api/items');
+            if (!response.ok) {
+                throw new Error('Failed to fetch menu items');
+            }
             const data = await response.json();
             setItems(data);
         } catch (error) {
-            console.error('Error:', error);
+            console.error('Error fetching menu items:', error);
+        }
+    };
+
+    const validateCustomerId = async () => {
+        try {
+            const numericId = parseInt(customerId.trim(), 10);
+            
+            console.log('Attempting to validate:', {
+                originalId: customerId,
+                numericId: numericId,
+                isValidNumber: !isNaN(numericId)
+            });
+
+            if (isNaN(numericId) || numericId <= 0) {
+                setCustomerIdError('Please enter a valid positive numeric ID.');
+                return false;
+            }
+
+            const response = await fetch(`http://localhost:8000/api/customer/${numericId}`);
+            
+            if (!response.ok) {
+                const data = await response.json();
+                setCustomerIdError(data.message || `Customer ID ${numericId} not found.`);
+                return false;
+            }
+
+            const data = await response.json();
+            
+            if (!data || !data.customer_id) {
+                setCustomerIdError(`Customer ID ${numericId} not found.`);
+                return false;
+            }
+
+            setCustomerData(data);
+            setCustomerIdError('');
+            return true;
+
+        } catch (error) {
+            console.error('Error validating customer ID:', error);
+            setCustomerIdError('An error occurred while validating the customer ID.');
+            return false;
         }
     };
 
@@ -43,77 +85,57 @@ const Menu = () => {
         return cart.reduce((total, item) => total + parseFloat(item.item_price), 0);
     };
 
+    const getCreditsToEarn = (amount) => {
+        return Math.round((amount / 500) * 100);
+    };
+
     const placeOrder = async (orderItems) => {
+        if (!customerId) {
+            setCustomerIdError('Please enter a customer ID.');
+            return;
+        }
+
         try {
+            const isValidCustomer = await validateCustomerId();
+            if (!isValidCustomer) {
+                return;
+            }
             const itemNames = orderItems.map(item => item.item_name);
-            const totalAmount = orderItems.reduce((sum, item) => sum + parseFloat(item.item_price), 0);
+            const totalAmount = orderItems.reduce((total, item) => total + parseFloat(item.item_price), 0);
+            const creditsToAdd = getCreditsToEarn(totalAmount);
+
             const response = await fetch('http://localhost:8000/api/place-order', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Accept': 'application/json'
                 },
                 body: JSON.stringify({
                     items: itemNames,
-                    customer_id: customerId, // Ensure customerId is included here
-                    staff_id: 1,
-                    chef_id: 1,
-                    amount: totalAmount, // Ensure amount is included here
-                    payment_method: 'Cash',
-                    status: 1
+                    customer_id: parseInt(customerId),
+                    staff_id: staffId,
+                    chef_id: 0,
+                    amount: totalAmount,
+                    payment_method: 'Credit',
+                    status: 1,
+                    credits_earned: creditsToAdd
                 })
             });
 
             const data = await response.json();
-            console.log('Server response:', data);
 
-            if (!response.ok) {
-                throw new Error(data.message || 'Order failed');
-            }
-
-            if (data.success) {
-                alert('Order created successfully!');
+            if (response.ok) {
+                alert(`Order placed successfully! Credits earned: ${creditsToAdd}`);
                 setCart([]);
                 setShowCart(false);
-                navigate('/order-confirmation', { state: { orderId: data.order_id, customerName, customerId, creditsEarned: data.credits_earned, contactNumber, email, credit: credit + data.credits_earned } });
+                setCustomerId('');
+                setCustomerIdError('');
+                setCustomerData(null);
             } else {
-                alert('Failed to create order: ' + data.message);
+                throw new Error(data.message || 'Failed to place order');
             }
         } catch (error) {
             console.error('Error placing order:', error);
-            alert('Error placing order: ' + error.message);
-        }
-    };
-
-    const addToFavorites = async (itemId) => {
-        try {
-            const response = await fetch('http://localhost:8000/api/customer-favorite', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({
-                    customer_id: customerId,
-                    item_id: itemId
-                })
-            });
-
-            const data = await response.json();
-            console.log('Add to favorites response:', data);
-
-            if (!response.ok) {
-                throw new Error(data.message || 'Failed to add to favorites');
-            }
-
-            if (data.success) {
-                alert('Item added to favorites!');
-            } else {
-                alert('Failed to add to favorites: ' + data.message);
-            }
-        } catch (error) {
-            console.error('Error adding to favorites:', error);
-            alert('Error adding to favorites: ' + error.message);
+            alert(error.message || 'Failed to place order');
         }
     };
 
@@ -126,13 +148,34 @@ const Menu = () => {
                 🛒 Cart ({cart.length})
             </button>
 
-            <h1>Our Menu</h1>
-            <div className="credit-notice">
-                <p>If your order minimum of ৳500 you will get 100 credits</p>
-            </div>
+            <h1>Staff Menu</h1>
             <nav className="menu-nav">
-                <button onClick={() => navigate('/customerhome', { state: { customerName, customerId, contactNumber, email, credit } })}>Back to Home</button>
+                <button onClick={() => navigate('/staffhome', { state: {  staffName, staffId, contactNumber, email  } })}>
+                    Back to Dashboard
+                </button>
             </nav>
+
+            <div className="customer-section">
+                <input
+                    type="text"
+                    className="customer-input"
+                    placeholder="Enter Customer ID"
+                    value={customerId}
+                    onChange={(e) => {
+                        setCustomerId(e.target.value);
+                        setCustomerIdError('');
+                        setCustomerData(null);
+                    }}
+                />
+                <button className="find-button" onClick={validateCustomerId}>Find</button>
+                {customerIdError && <p className="error-message">{customerIdError}</p>}
+                {customerData && (
+                    <div className="customer-details">
+                        <p>Customer Name: {customerData.customer_name}</p>
+                        <p>Contact: {customerData.contact}</p>
+                    </div>
+                )}
+            </div>
 
             <div className="menu-grid">
                 {items.map(item => (
@@ -161,12 +204,6 @@ const Menu = () => {
                                 onClick={() => placeOrder([item])}
                             >
                                 Order This Item
-                            </button>
-                            <button 
-                                className="add-fav-item-btn"
-                                onClick={() => addToFavorites(item.item_id)}
-                            >
-                                Add to Favorites
                             </button>
                         </div>
                     </div>
@@ -202,12 +239,16 @@ const Menu = () => {
                     </div>
                     <div className="cart-total">
                         <strong>Total: ৳{getTotal()}</strong>
+                        <p className="credits-info">
+                            Credits to be earned: {getCreditsToEarn(getTotal())}
+                        </p>
                     </div>
                     <button 
                         className="order-btn"
                         onClick={() => placeOrder(cart)}
+                        disabled={!customerId || cart.length === 0}
                     >
-                        Place Order
+                        Place Order for Customer
                     </button>
                 </div>
             )}
@@ -215,4 +256,4 @@ const Menu = () => {
     );
 };
 
-export default Menu;
+export default StaffMenu;

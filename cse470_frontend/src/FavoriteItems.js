@@ -1,33 +1,41 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './menu.css';
 
-const Menu = () => {
-    const [items, setItems] = useState([]);
+const FavoriteItems = () => {
+    const [favorites, setFavorites] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const [cart, setCart] = useState([]);
     const [showCart, setShowCart] = useState(false);
+
     const navigate = useNavigate();
     const location = useLocation();
-    const customerName = location.state?.customerName || 'Customer';
-    const customerId = location.state?.customerId;
-    const contactNumber = location.state?.contactNumber;
-    const email = location.state?.email;
-    const credit = location.state?.credit;
-    console.log(customerName, customerId, contactNumber, email, credit);
+    const { customerName, customerId, contactNumber, email, credit } = location.state || {};
+
+    const fetchFavoriteItems = useCallback(async () => {
+        if (!customerId) return;
+
+        try {
+            setLoading(true);
+            const response = await fetch(`http://localhost:8000/api/customer-favorite/${customerId}`);
+            const data = await response.json();
+
+            if (response.ok) {
+                setFavorites(data.data);
+            } else {
+                setError(data.message || 'Failed to fetch favorite items');
+            }
+        } catch (error) {
+            setError(error.message);
+        } finally {
+            setLoading(false);
+        }
+    }, [customerId]);
 
     useEffect(() => {
-        fetchMenuItems();
-    }, []);
-
-    const fetchMenuItems = async () => {
-        try {
-            const response = await fetch('http://localhost:8000/api/items');
-            const data = await response.json();
-            setItems(data);
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    };
+        fetchFavoriteItems();
+    }, [fetchFavoriteItems]);
 
     const addToCart = (item) => {
         setCart([...cart, item]);
@@ -55,10 +63,10 @@ const Menu = () => {
                 },
                 body: JSON.stringify({
                     items: itemNames,
-                    customer_id: customerId, // Ensure customerId is included here
+                    customer_id: customerId,
                     staff_id: 1,
                     chef_id: 1,
-                    amount: totalAmount, // Ensure amount is included here
+                    amount: totalAmount,
                     payment_method: 'Cash',
                     status: 1
                 })
@@ -75,7 +83,7 @@ const Menu = () => {
                 alert('Order created successfully!');
                 setCart([]);
                 setShowCart(false);
-                navigate('/order-confirmation', { state: { orderId: data.order_id, customerName, customerId, creditsEarned: data.credits_earned, contactNumber, email, credit: credit + data.credits_earned } });
+                navigate('/favorder-confirmation', { state: { orderId: data.order_id, customerName, customerId, creditsEarned: data.credits_earned, contactNumber, email, credit: credit + data.credits_earned } });
             } else {
                 alert('Failed to create order: ' + data.message);
             }
@@ -85,37 +93,42 @@ const Menu = () => {
         }
     };
 
-    const addToFavorites = async (itemId) => {
+    const removeFromFavorites = async (itemId) => {
         try {
-            const response = await fetch('http://localhost:8000/api/customer-favorite', {
-                method: 'POST',
+            const response = await fetch(`http://localhost:8000/api/customer-favorite/${customerId}/${itemId}`, {
+                method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
-                },
-                body: JSON.stringify({
-                    customer_id: customerId,
-                    item_id: itemId
-                })
+                }
             });
 
             const data = await response.json();
-            console.log('Add to favorites response:', data);
+            console.log('Remove from favorites response:', data);
 
             if (!response.ok) {
-                throw new Error(data.message || 'Failed to add to favorites');
+                throw new Error(data.message || 'Failed to remove from favorites');
             }
 
-            if (data.success) {
-                alert('Item added to favorites!');
+            if (data.status === 'success') {
+                alert('Item removed from favorites!');
+                setFavorites(favorites.filter(favorite => favorite.item_id !== itemId));
             } else {
-                alert('Failed to add to favorites: ' + data.message);
+                alert('Failed to remove from favorites: ' + data.message);
             }
         } catch (error) {
-            console.error('Error adding to favorites:', error);
-            alert('Error adding to favorites: ' + error.message);
+            console.error('Error removing from favorites:', error);
+            alert('Error removing from favorites: ' + error.message);
         }
     };
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
+    if (error) {
+        return <div>Error: {error}</div>;
+    }
 
     return (
         <div className="menu-container">
@@ -126,7 +139,7 @@ const Menu = () => {
                 🛒 Cart ({cart.length})
             </button>
 
-            <h1>Our Menu</h1>
+            <h1>Your Favorite Items</h1>
             <div className="credit-notice">
                 <p>If your order minimum of ৳500 you will get 100 credits</p>
             </div>
@@ -135,14 +148,14 @@ const Menu = () => {
             </nav>
 
             <div className="menu-grid">
-                {items.map(item => (
-                    <div key={item.item_id} className="menu-item">
-                        <h3 className="item-name">{item.item_name}</h3>
-                        <p className="price">৳{item.item_price}</p>
+                {favorites.map(favorite => (
+                    <div key={favorite.item_id} className="menu-item">
+                        <h3 className="item-name">{favorite.item.item_name}</h3>
+                        <p className="price">৳{favorite.item.item_price}</p>
                         <div className="image-container">
                             <img 
-                                src={`data:image/jpeg;base64,${item.photo}`} 
-                                alt={item.item_name}
+                                src={`data:image/jpeg;base64,${favorite.item.photo}`} 
+                                alt={favorite.item.item_name}
                                 onError={(e) => {
                                     e.target.onerror = null;
                                     e.target.src = 'default-food-image.jpg';
@@ -152,21 +165,21 @@ const Menu = () => {
                         <div className="button-container">
                             <button 
                                 className="add-to-cart-btn"
-                                onClick={() => addToCart(item)}
+                                onClick={() => addToCart(favorite.item)}
                             >
                                 Add to Cart
                             </button>
                             <button 
                                 className="order-item-btn"
-                                onClick={() => placeOrder([item])}
+                                onClick={() => placeOrder([favorite.item])}
                             >
                                 Order This Item
                             </button>
                             <button 
-                                className="add-fav-item-btn"
-                                onClick={() => addToFavorites(item.item_id)}
+                                className="rmv-fav-item-btn"
+                                onClick={() => removeFromFavorites(favorite.item_id)}
                             >
-                                Add to Favorites
+                                Remove from Favorites
                             </button>
                         </div>
                     </div>
@@ -215,4 +228,4 @@ const Menu = () => {
     );
 };
 
-export default Menu;
+export default FavoriteItems;
