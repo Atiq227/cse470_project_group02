@@ -1,43 +1,67 @@
-const CustomerHome = () => {
-    const navigate = useNavigate(); // Ensure `useNavigate` is imported from `react-router-dom`
-    const customerName = "Your Customer Name"; // Replace with actual logic to get the customer's name
+import React from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import './customerhome.css';
 
-    const actions = [
+const CustomerHome = () => {
+    const location = useLocation();
+    const navigate = useNavigate();
+    const { customerName, customerId, contactNumber, email, credit } = location.state || {};
+
+    const actionCards = [
         {
-            title: 'View Menu',
-            description: 'Browse our food menu',
-            onClick: () => navigate('/menu', { state: { customerName } }),
+            title: 'Order Food',
+            description: 'Browse our menu and place an order',
+            onClick: () => navigate('/menu', { state: { customerName, customerId, contactNumber, email, credit } })
         },
         {
             title: 'Previous Orders',
             description: 'View your order history',
-            onClick: () => navigate('/previousorders', { state: { customerName } }),
+            onClick: () => navigate('/previous-orders', { state: { customerName, customerId, contactNumber, email, credit } })
         },
         {
-            title: 'Credit Balance',
-            description: 'Check your available credit',
-            onClick: () => navigate('/credit', { state: { customerName } }),
+            title: 'Credit',
+            description: 'View your credit balance',
+            onClick: () => navigate('/credit', { state: { customerId, customerName, contactNumber, email, credit } })
         },
         {
             title: 'Favourite Items',
             description: 'View your saved favorites',
-            onClick: () => navigate('/favorites', { state: { customerName } }),
+            onClick: () => navigate('/favorites', { state: {customerId, customerName, contactNumber, email, credit } })
         },
         {
             title: 'View Profile',
             description: 'Manage your account details',
-            onClick: () => navigate('/customerprofile', { state: { customerName } }),
-        },
+            onClick: () => navigate('/customerprofile', { state: { customerName, contactNumber, email, credit } })
+        }
     ];
 
     return (
-        <div>
-            {actions.map((action, index) => (
-                <div key={index} onClick={action.onClick}>
-                    <h3>{action.title}</h3>
-                    <p>{action.description}</p>
-                </div>
-            ))}
+        <div className="CustomerHome">
+            <h1>Welcome {customerName}</h1>
+            <p>Your customer ID is: {customerId}</p>
+            <div className="actions-grid">
+                {actionCards.map((card, index) => (
+                    <div 
+                        key={index}
+                        className="action-card"
+                        onClick={card.onClick}
+                    >
+                        <h2>{card.title}</h2>
+                        <p>{card.description}</p>
+                    </div>
+                ))}
+            </div>
+            <div className="logout-container">
+                <button 
+                    onClick={() => {
+                        alert('Logged out');
+                        navigate('/login');
+                    }} 
+                    className="logout-button"
+                >
+                    Logout
+                </button>
+            </div>
         </div>
     );
 };

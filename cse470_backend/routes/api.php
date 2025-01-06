@@ -3,11 +3,14 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\ChefController;
-use App\Http\Controllers\FoodItemController;
+use App\Http\Controllers\ItemController;
 use App\Http\Controllers\OrderController;
-use App\Http\Controllers\NotificationController;
-use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\StaffLeaveController;
+use App\Http\Controllers\StaffComplaintController;
+use App\Http\Controllers\StaffTaskController;
+use App\Http\Controllers\CustomerFavoriteController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -20,26 +23,40 @@ use App\Http\Controllers\AuthController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
+// User registration route
 Route::post('register', [UserController::class, 'register']);
 
-Route::post('/login', [AuthController::class, 'login']);
+// User login route
+Route::post('login', [UserController::class, 'login']);
 
-Route::post('/menu/add', [ChefController::class, 'addMenu']);
-Route::post('/menu/item/add', [ChefController::class, 'addFoodItem']);
-Route::delete('/menu/item/remove/{id}', [ChefController::class, 'removeFoodItem']);
-Route::post('/order/{id}/accept', [ChefController::class, 'acceptOrder']);
-Route::post('/order/{id}/decline', [ChefController::class, 'declineOrder']);
-Route::post('/notify', [ChefController::class, 'sendNotification']);
+// Menu items route
+Route::get('/items', [ItemController::class, 'index']);
 
-Route::post('/food-items', [FoodItemController::class, 'store']); // Add food item
-Route::delete('/food-items/{id}', [FoodItemController::class, 'destroy']); // Remove food item
+// Place order route
+Route::post('/place-order', [OrderController::class, 'store']);
 
-Route::post('/orders/{id}/accept', [OrderController::class, 'accept']); // Accept order
-Route::post('/orders/{id}/decline', [OrderController::class, 'decline']); // Decline order
+Route::get('/previous-orders/{customerId}', [OrderController::class, 'getPreviousOrders']);
 
-Route::post('/notifications', [NotificationController::class, 'store']); // Send notification
+Route::post('/submit-review', [OrderController::class, 'submitReview']);
 
+Route::post('staff-register', [UserController::class, 'staffRegister']);
+
+Route::post('staff-login', [UserController::class, 'staffLogin']);
+
+Route::get('/customer/{id}', [CustomerController::class, 'show']);
+
+Route::get('/staff-orders/{staffId}', [OrderController::class, 'getStaffOrderHistory']);
+
+Route::post('staff-leave', [StaffLeaveController::class, 'store']);
+
+Route::post('staff-complaint', [StaffComplaintController::class, 'store']);
+
+Route::post('staff-task', [StaffTaskController::class, 'store']);
+
+Route::put('staff-task/{id}/done', [StaffTaskController::class, 'markAsDone']);
+
+Route::get('staff-tasks/{staffId}', [StaffTaskController::class, 'index']);
+
+Route::get('customer-favorite/{customerId}', [CustomerFavoriteController::class, 'index']);
+Route::post('customer-favorite', [CustomerFavoriteController::class, 'store']);
+Route::delete('customer-favorite/{customerId}/{itemId}', [CustomerFavoriteController::class, 'destroy']);

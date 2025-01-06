@@ -1,0 +1,49 @@
+.staff-profile {
+    padding: 50px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
+    max-width: 600px;
+    width: 90%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(to bottom right, #ffffff, #f8f9fa);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1), 
+                0 6px 6px rgba(0, 0, 0, 0.05);
+}
+
+.staff-profile h2 {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 35px;
+    font-weight: 700;
+    font-size: 32px;
+    letter-spacing: 0.5px;
+}
+
+.staff-profile p {
+    font-size: 18px;
+    margin: 20px 0;
+    color: #34495e;
+}
+
+.staff-profile button {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(to right, #007bff, #0056b3);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 30px;
+    font-size: 16px;
+    font-weight: 500;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.staff-profile button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.3);
+}

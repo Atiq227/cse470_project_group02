@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './login.css';
 
-function Login() {
+function StaffLogin() {
     const [formData, setFormData] = useState({ email: '', password: '' });
     const [status, setStatus] = useState({ success: false, error: '' });
     const navigate = useNavigate();
@@ -17,7 +17,7 @@ function Login() {
         setStatus({ success: false, error: '' });
 
         try {
-            const response = await fetch('http://localhost:8000/api/login', {
+            const response = await fetch('http://localhost:8000/api/staff-login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -30,13 +30,13 @@ function Login() {
 
             if (response.ok) {
                 setStatus({ success: true, error: '' });
-                navigate('/customerhome', { 
+                navigate('/staffhome', { 
                     state: { 
-                    customerName: data.user.customerName, 
-                    customerId: data.user.customerId,
-                    contactNumber: data.user.contactNumber,
-                    email: data.user.email,
-                    credit: data.user.credit
+                        staffName: data.user.staffName, 
+                        staffId: data.user.staffId,
+                        contactNumber: data.user.contactNumber,
+                        email: data.user.email,
+                        role: data.user.role
                     } 
                 });
             } else {
@@ -49,7 +49,7 @@ function Login() {
 
     return (
         <div className="Login">
-            <h1>Please log in</h1>
+            <h1>Staff Login</h1>
             <form onSubmit={handleSubmit}>
                 <label>
                     Email:
@@ -85,7 +85,7 @@ function Login() {
                     className="signup-link"
                     onClick={(e) => {
                         e.preventDefault();
-                        navigate('/signup');
+                        navigate('/staff-signup');
                     }}
                 >
                     Sign up now
@@ -95,4 +95,4 @@ function Login() {
     );
 }
 
-export default Login;
+export default StaffLogin;
