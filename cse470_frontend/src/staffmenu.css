@@ -4,6 +4,21 @@
     margin: 0 auto;
     position: relative;
 }
+
+.menu-container .find-button {
+    padding: 12px;
+    font-size: 16px;
+    background-color: #2c5282;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.menu-container .find-button:hover {
+    background-color: #1a365d;
+}
 .menu-container h1 {
     color: white !important;
     text-align: center;
@@ -288,6 +303,20 @@ h2 {
     border-radius: 4px;
     margin: 10px 0;
 }
+.customer-section input {
+    width: 20%;
+    padding: 12px;
+    margin: 8px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.customer-section input:focus {
+    outline: none;
+    border-color: #2c5282;
+    box-shadow: 0 0 3px rgba(44, 82, 130, 0.3);
+}
 
 .customer-info {
     background-color: #f0f0f0; /* Light background color */
@@ -297,51 +326,6 @@ h2 {
     margin-top: 10px;
 }
 
-.add-fav-item-btn {
-    background-color: #4CAF50; /* Green */
-    border: none;
-    color: white;
-    padding: 15px 25px; /* Increased padding to match other buttons */
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 22px; /* Increased font size to match other buttons */
-    margin: 4px 2px;
-    cursor: pointer;
-    border-radius: 4px;
-    transition-duration: 0.4s;
-    width: auto; /* Allow button to size with content */
-    min-width: 120px; /* Minimum width to match other buttons */
-}
-
-.add-fav-item-btn:hover {
-    background-color: white;
-    color: black;
-    border: 2px solid #4CAF50;
-}
-
-.rmv-fav-item-btn {
-    background-color: #bc2323; /* Green */
-    border: none;
-    color: white;
-    padding: 20px 20px; /* Increased padding to match other buttons */
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 17px; /* Increased font size to match other buttons */
-    margin: 4px 2px;
-    cursor: pointer;
-    border-radius: 4px;
-    transition-duration: 0.4s;
-    width: auto; /* Allow button to size with content */
-    min-width: 120px; /* Minimum width to match other buttons */
-}
-
-.rmv-fav-item-btn:hover {
-    background-color: white;
-    color: black;
-    border: 2px solid #bc2323;
-}
 @media (max-width: 768px) {
     .menu-grid {
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
