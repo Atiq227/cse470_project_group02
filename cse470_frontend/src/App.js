@@ -23,9 +23,13 @@ import StaffComplaint from './StaffComplaint';
 import StaffTasks from './StaffTasks';
 import FavoriteItems from './FavoriteItems';
 import FavOrderConfirmation from './favorderConfirmation';
-
-
-
+import AdminLogin from './AdminLogin';
+import Adminhome from './adminhome';
+import FeedbackCheck from './FeedbackCheck';
+import CheckComplaint from './CheckComplaint';
+import CheckStaffLeave from './CheckStaffLeave';
+import ModifyItemPrice from './ModifyItemPrice';
+import TotalSales from './TotalSales';
 function App() {
     return (
         <Router>
@@ -52,6 +56,13 @@ function App() {
                 <Route path="/staff-tasks" element={<StaffTasks />} />
                 <Route path="/favorites" element={<FavoriteItems />} />
                 <Route path="/favorder-confirmation" element={<FavOrderConfirmation />} />
+                <Route path="/admin-login" element={<AdminLogin />} />
+                <Route path="/admin-home" element={<Adminhome />} />
+                <Route path="/feedback" element={<FeedbackCheck />} />
+                <Route path="/check-complaint" element={<CheckComplaint />} />
+                <Route path="/check-staff-leave" element={<CheckStaffLeave />} />
+                <Route path="/modify-item-price" element={<ModifyItemPrice />} />
+                <Route path="/total-sales" element={<TotalSales />} />
             </Routes>
         </Router>
     );
