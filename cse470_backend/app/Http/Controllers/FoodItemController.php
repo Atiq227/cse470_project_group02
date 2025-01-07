@@ -2,19 +2,38 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\FoodItem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Schema;
 
 class FoodItemController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        //
+        try {
+            $foodItems = DB::table('item')
+                ->select(['item_id', 'item_name', 'item_price'])
+                ->get();
+
+            \Log::info('Fetched food items:', ['count' => count($foodItems), 'items' => $foodItems]);
+
+            return response()->json([
+                'status' => 'success',
+                'data' => [
+                    'items' => $foodItems
+                ]
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error('Error fetching food items: ' . $e->getMessage());
+            
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Error fetching food items',
+                'debug_message' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**

@@ -2,17 +2,26 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class FoodItem extends Model
 {
-    use HasFactory;
+    protected $table = 'item';
+    protected $primaryKey = 'item_id';
+    
+    protected $fillable = [
+        'item_name',
+        'item_price',
+        'photo'
+    ];
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = ['name', 'price', 'quantity', 'is_available'];
+    protected $attributes = [
+        'photo' => null
+    ];
+
+    public $timestamps = false;
+
+    protected $casts = [
+        'item_price' => 'decimal:2'
+    ];
 }

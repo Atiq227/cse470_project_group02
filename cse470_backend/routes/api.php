@@ -8,6 +8,8 @@ use App\Http\Controllers\FoodItemController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\AuthController;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,7 +28,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::post('register', [UserController::class, 'register']);
 
-Route::post('/login', [AuthController::class, 'login']);
+Route::post('/login', [UserController::class, 'login']);
 
 Route::post('/menu/add', [ChefController::class, 'addMenu']);
 Route::post('/menu/item/add', [ChefController::class, 'addFoodItem']);
@@ -42,4 +44,46 @@ Route::post('/orders/{id}/accept', [OrderController::class, 'accept']); // Accep
 Route::post('/orders/{id}/decline', [OrderController::class, 'decline']); // Decline order
 
 Route::post('/notifications', [NotificationController::class, 'store']); // Send notification
+
+Route::get('/csrf-cookie', function() {
+    return response()->json(['message' => 'CSRF cookie set']);
+})->middleware('web');
+
+Route::middleware(['api'])->group(function () {
+    Route::post('/register', 'App\Http\Controllers\UserController@register');
+    Route::post('/login', 'App\Http\Controllers\UserController@login');
+    Route::get('/food-items', 'App\Http\Controllers\FoodItemController@index');
+});
+
+Route::get('/test-db', function () {
+    try {
+        $users = DB::table('user')->get();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Database connection successful',
+            'data' => $users
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 'error',
+            'message' => $e->getMessage()
+        ], 500);
+    }
+});
+
+// Temporary route to update password - remove this after using it
+Route::get('/update-password', function() {
+    DB::table('user')
+        ->where('email', 'test@example.com')
+        ->update([
+            'password' => Hash::make('password')
+        ]);
+    
+    return "Password updated";
+});
+
+Route::get('/food-items', [FoodItemController::class, 'index']);
+
+Route::get('/orders', [ChefController::class, 'getOrders']);
+Route::get('/staff', [ChefController::class, 'getStaffList']);
 

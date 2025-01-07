@@ -1,157 +1,235 @@
-import React, { useState } from "react";
-import axios from "axios"; // Importing axios for HTTP requests
+import React, { useState, useEffect } from "react";
+import api from '../config/axios';
+import './ChefDashboard.css';
 
-// The main component for the Chef's Dashboard
 const ChefDashboard = () => {
-  // State variables to handle form inputs and data
-  const [menuName, setMenuName] = useState(""); // To store the menu name
-  const [itemName, setItemName] = useState(""); // To store the food item name
-  const [itemPrice, setItemPrice] = useState(""); // To store the food item price
-  const [menuId, setMenuId] = useState(""); // To store the menu ID for adding items
-  const [orderId, setOrderId] = useState(""); // To store the order ID for managing orders
-  const [notificationMessage, setNotificationMessage] = useState(""); // To store the notification message
+  // State for food items
+  const [foodItems, setFoodItems] = useState([]);
+  const [newItem, setNewItem] = useState({ name: '', price: '' });
+  
+  // State for orders
+  const [orders, setOrders] = useState([]);
+  
+  // State for notifications
+  const [notification, setNotification] = useState('');
+  const [staffList, setStaffList] = useState([]);
+  const [selectedStaff, setSelectedStaff] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  // Function to add a new menu
-  const addMenu = async () => {
+  // Fetch food items on component mount
+  useEffect(() => {
+    fetchFoodItems();
+    fetchOrders();
+    fetchStaffList();
+  }, []);
+
+  // Fetch food items
+  const fetchFoodItems = async () => {
     try {
-      const response = await axios.post("http://localhost:8000/api/create-menu", {
-        menu_name: menuName, // Sending menu name to the backend
+      const response = await api.get('/food-items');
+      console.log('Food items response:', response.data); // Debug log
+      if (response.data.status === 'success') {
+        setFoodItems(response.data.data.items);
+        console.log('Updated food items:', response.data.data.items); // Debug log
+      }
+    } catch (error) {
+      console.error('Error fetching food items:', error);
+    }
+  };
+
+  // Add new food item
+  const handleAddItem = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+        console.log('Sending new item data:', { 
+            item_name: newItem.name, 
+            item_price: parseFloat(newItem.price) 
+        }); // Debug log
+
+        const response = await api.post('/menu/item/add', {
+            item_name: newItem.name,
+            item_price: parseFloat(newItem.price)
+        });
+
+        console.log('Add item response:', response.data); // Debug log
+
+        if (response.data.status === 'success') {
+            setNewItem({ name: '', price: '' });
+            await fetchFoodItems(); // Make sure to await this
+            alert('Food item added successfully');
+        } else {
+            setError(response.data.message || 'Failed to add item');
+        }
+    } catch (error) {
+        console.error('Error adding food item:', error);
+        setError(error.response?.data?.message || 'Error adding food item');
+    } finally {
+        setIsLoading(false);
+    }
+  };
+
+  // Remove food item
+  const handleRemoveItem = async (itemId) => {
+    try {
+      await api.delete(`/menu/item/remove/${itemId}`);
+      fetchFoodItems();
+    } catch (error) {
+      console.error('Error removing food item:', error);
+    }
+  };
+
+  // Fetch orders
+  const fetchOrders = async () => {
+    try {
+      const response = await api.get('/orders');
+      setOrders(response.data.orders);
+    } catch (error) {
+      console.error('Error fetching orders:', error);
+    }
+  };
+
+  // Handle order acceptance
+  const handleAcceptOrder = async (orderId) => {
+    try {
+      await api.post(`/order/${orderId}/accept`);
+      fetchOrders();
+    } catch (error) {
+      console.error('Error accepting order:', error);
+    }
+  };
+
+  // Handle order decline
+  const handleDeclineOrder = async (orderId) => {
+    try {
+      await api.post(`/order/${orderId}/decline`);
+      fetchOrders();
+    } catch (error) {
+      console.error('Error declining order:', error);
+    }
+  };
+
+  // Fetch staff list
+  const fetchStaffList = async () => {
+    try {
+      const response = await api.get('/staff');
+      setStaffList(response.data.staff);
+    } catch (error) {
+      console.error('Error fetching staff list:', error);
+    }
+  };
+
+  // Send notification
+  const handleSendNotification = async (e) => {
+    e.preventDefault();
+    try {
+      await api.post('/notify', {
+        message: notification,
+        staff_ids: selectedStaff
       });
-      alert(response.data.message); // Showing success message
+      setNotification('');
+      setSelectedStaff([]);
     } catch (error) {
-      console.error(error); // Logging any errors
-      alert("Failed to create menu"); // Showing failure message
-    }
-  };
-
-  // Function to add a new food item
-  const addFoodItem = async () => {
-    try {
-      const response = await axios.post("http://localhost:8000/api/add-food-item", {
-        item_name: itemName, // Sending food item name to the backend
-        item_price: itemPrice, // Sending food item price to the backend
-        menu_id: menuId, // Sending menu ID to the backend
-      });
-      alert(response.data.message); // Showing success message
-    } catch (error) {
-      console.error(error); // Logging any errors
-      alert("Failed to add food item"); // Showing failure message
-    }
-  };
-
-  // Function to remove a food item by its ID
-  const removeFoodItem = async (itemId) => {
-    try {
-      const response = await axios.delete(`http://localhost:8000/api/remove-food-item/${itemId}`);
-      alert(response.data.message); // Showing success message
-    } catch (error) {
-      console.error(error); // Logging any errors
-      alert("Failed to remove food item"); // Showing failure message
-    }
-  };
-
-  // Function to accept an order by its ID
-  const acceptOrder = async () => {
-    try {
-      const response = await axios.post(`http://localhost:8000/api/accept-order/${orderId}`);
-      alert(response.data.message); // Showing success message
-    } catch (error) {
-      console.error(error); // Logging any errors
-      alert("Failed to accept order"); // Showing failure message
-    }
-  };
-
-  // Function to decline an order by its ID
-  const declineOrder = async () => {
-    try {
-      const response = await axios.post(`http://localhost:8000/api/decline-order/${orderId}`);
-      alert(response.data.message); // Showing success message
-    } catch (error) {
-      console.error(error); // Logging any errors
-      alert("Failed to decline order"); // Showing failure message
-    }
-  };
-
-  // Function to send notifications to staff
-  const sendNotification = async () => {
-    try {
-      const response = await axios.post("http://localhost:8000/api/send-notification", {
-        message: notificationMessage, // Sending notification message to the backend
-      });
-      alert(response.data.message); // Showing success message
-    } catch (error) {
-      console.error(error); // Logging any errors
-      alert("Failed to send notification"); // Showing failure message
+      console.error('Error sending notification:', error);
     }
   };
 
   return (
-    <div className="chef-dashboard"> {/* Main container for the Chef Dashboard */}
-      <h2>Chef Dashboard</h2>
+    <div className="chef-dashboard">
+      <h1>Chef Dashboard</h1>
 
-      {/* Section for adding a new menu */}
-      <div className="section">
-        <h3>Add Menu</h3>
-        <input
-          type="text"
-          placeholder="Menu Name"
-          value={menuName} // Controlled input for menu name
-          onChange={(e) => setMenuName(e.target.value)} // Update menu name state
-        />
-        <button onClick={addMenu}>Add Menu</button> {/* Call addMenu on click */}
-      </div>
+      {/* Add Food Item Section */}
+      <section className="section">
+        <h2>Add New Food Item</h2>
+        {error && <div className="error-message">{error}</div>}
+        <form onSubmit={handleAddItem}>
+          <input
+            type="text"
+            placeholder="Food Item Name"
+            value={newItem.name}
+            onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
+            required
+            disabled={isLoading}
+          />
+          <input
+            type="number"
+            placeholder="Price"
+            value={newItem.price}
+            onChange={(e) => setNewItem({ ...newItem, price: e.target.value })}
+            required
+            min="0"
+            step="0.01"
+            disabled={isLoading}
+          />
+          <button type="submit" disabled={isLoading}>
+            {isLoading ? 'Adding...' : 'Add Item'}
+          </button>
+        </form>
+      </section>
 
-      {/* Section for adding a new food item */}
-      <div className="section">
-        <h3>Add Food Item</h3>
-        <input
-          type="text"
-          placeholder="Item Name"
-          value={itemName} // Controlled input for item name
-          onChange={(e) => setItemName(e.target.value)} // Update item name state
-        />
-        <input
-          type="number"
-          placeholder="Item Price"
-          value={itemPrice} // Controlled input for item price
-          onChange={(e) => setItemPrice(e.target.value)} // Update item price state
-        />
-        <input
-          type="text"
-          placeholder="Menu ID"
-          value={menuId} // Controlled input for menu ID
-          onChange={(e) => setMenuId(e.target.value)} // Update menu ID state
-        />
-        <button onClick={addFoodItem}>Add Food Item</button> {/* Call addFoodItem on click */}
-      </div>
+      {/* Food Items List Section */}
+      <section className="section">
+        <h2>Current Food Items</h2>
+        <div className="food-items-grid">
+          {foodItems.map((item) => (
+            <div key={item.item_id} className="food-item-card">
+              <h3>{item.item_name}</h3>
+              <p>${item.item_price}</p>
+              <button onClick={() => handleRemoveItem(item.item_id)}>Remove</button>
+            </div>
+          ))}
+        </div>
+      </section>
 
-      {/* Section for managing orders */}
-      <div className="section">
-        <h3>Manage Orders</h3>
-        <input
-          type="text"
-          placeholder="Order ID"
-          value={orderId} // Controlled input for order ID
-          onChange={(e) => setOrderId(e.target.value)} // Update order ID state
-        />
-        <button onClick={acceptOrder}>Accept Order</button> {/* Call acceptOrder on click */}
-        <button onClick={declineOrder}>Decline Order</button> {/* Call declineOrder on click */}
-      </div>
+      {/* Orders Section */}
+      <section className="section">
+        <h2>Pending Orders</h2>
+        <div className="orders-list">
+          {orders.map((order) => (
+            <div key={order.id} className="order-card">
+              <h3>Order #{order.id}</h3>
+              <p>{order.items}</p>
+              <div className="order-actions">
+                <button onClick={() => handleAcceptOrder(order.id)}>Accept</button>
+                <button onClick={() => handleDeclineOrder(order.id)}>Decline</button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
 
-      {/* Section for sending notifications */}
-      <div className="section">
-        <h3>Send Notification</h3>
-        <textarea
-          placeholder="Notification Message"
-          value={notificationMessage} // Controlled input for notification message
-          onChange={(e) => setNotificationMessage(e.target.value)} // Update notification message state
-        ></textarea>
-        <button onClick={sendNotification}>Send Notification</button> {/* Call sendNotification on click */}
-      </div>
+      {/* Notifications Section */}
+      <section className="section">
+        <h2>Send Notification to Staff</h2>
+        <form onSubmit={handleSendNotification}>
+          <textarea
+            placeholder="Notification message"
+            value={notification}
+            onChange={(e) => setNotification(e.target.value)}
+            required
+          />
+          <select
+            multiple
+            value={selectedStaff}
+            onChange={(e) => setSelectedStaff(Array.from(e.target.selectedOptions, option => option.value))}
+          >
+            {staffList.map((staff) => (
+              <option key={staff.id} value={staff.id}>
+                {staff.name}
+              </option>
+            ))}
+          </select>
+          <button type="submit">Send Notification</button>
+        </form>
+      </section>
     </div>
   );
 };
 
-export default ChefDashboard; // Export the component for use in App.js
+export default ChefDashboard;
+
 
 

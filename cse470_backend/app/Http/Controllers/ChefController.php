@@ -54,17 +54,17 @@ class ChefController extends Controller
 
     public function addFoodItem(Request $request)
     {
+        \Log::info('Received request data:', $request->all());
+
         $validator = Validator::make($request->all(), [
-            'menu_id' => 'required|exists:menus,id',
-            'name' => 'required|string|max:255',
-            'price' => 'required|numeric|min:0',
-            'availability' => 'required|boolean',
+            'item_name' => 'required|string|max:100',
+            'item_price' => 'required|numeric|min:0'
         ]);
 
         if ($validator->fails()) {
+            \Log::error('Validation failed:', $validator->errors()->toArray());
             return response()->json([
                 'status' => 'error',
-                'type' => 'validation_error',
                 'message' => 'Validation failed',
                 'errors' => $validator->errors()
             ], 400);
@@ -73,31 +73,33 @@ class ChefController extends Controller
         try {
             DB::beginTransaction();
 
-            DB::table('menu_items')->insert([
-                'menu_id' => $request->menu_id,
-                'name' => $request->name,
-                'price' => $request->price,
-                'availability' => $request->availability,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+            $data = [
+                'item_name' => $request->item_name,
+                'item_price' => $request->item_price,
+                'photo' => null
+            ];
+
+            \Log::info('Attempting to insert:', $data);
+
+            $inserted = DB::table('item')->insert($data);
+
+            \Log::info('Insert result:', ['success' => $inserted]);
 
             DB::commit();
 
             return response()->json([
                 'status' => 'success',
-                'message' => 'Food item added successfully',
+                'message' => 'Food item added successfully'
             ], 201);
         } catch (\Exception $e) {
             DB::rollBack();
-
             \Log::error('Failed to add food item: ' . $e->getMessage());
+            \Log::error('Stack trace: ' . $e->getTraceAsString());
 
             return response()->json([
                 'status' => 'error',
-                'type' => 'server_error',
-                'message' => 'Failed to add food item due to a server error.',
-                'error' => $e->getMessage()
+                'message' => 'Failed to add food item',
+                'debug_message' => $e->getMessage()
             ], 500);
         }
     }
