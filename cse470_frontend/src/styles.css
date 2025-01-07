@@ -1,0 +1,48 @@
+/* General styling for the Chef Dashboard */
+.chef-dashboard {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  /* Styling for section containers */
+  .section {
+    margin-bottom: 20px;
+  }
+  
+  /* Input fields styling */
+  input, textarea {
+    margin: 5px 0;
+    padding: 10px;
+    width: 100%;
+    max-width: 400px;
+    font-size: 16px;
+    box-sizing: border-box;
+  }
+  
+  /* Button styling */
+  button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Heading styles */
+  h2, h3 {
+    color: #333;
+  }
+  
+  /* General layout tweaks */
+  textarea {
+    height: 100px;
+  }
+  
+  
