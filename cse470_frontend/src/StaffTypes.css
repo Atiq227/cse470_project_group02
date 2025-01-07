@@ -1,0 +1,38 @@
+.staff-types-container {
+    text-align: center;
+    padding: 20px;
+}
+
+.staff-types-container h1 {
+    font-size: 2em;
+    margin-bottom: 20px;
+    color: white !important;
+}
+
+.staff-types-container .options {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.staff-types-container .options button {
+    padding: 15px 30px;
+    font-size: 1.2em;
+    width: 150px;
+    height: 60px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.staff-types-container .options button:hover {
+    background-color: #45a049;
+    transform: scale(1.05);
+}
+
+.staff-types-container .options button:active {
+    background-color: #39903d;
+}

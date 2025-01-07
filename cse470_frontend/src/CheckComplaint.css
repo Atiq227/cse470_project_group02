@@ -1,0 +1,58 @@
+body {
+    background-color: #f0f0f0; /* Set your desired background color for the entire page */
+}
+
+.complaints-container {
+    padding: 20px;
+    background-color: #333; /* Dark background color for the container */
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+    max-width: 800px;
+    color: #fff; /* White text color */
+}
+
+.complaints-container h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #fff; /* White text color */
+}
+
+.back-button {
+    background-color: #555;
+    color: #fff;
+    padding: 5px 10px; /* Smaller padding */
+    font-size: 14px; /* Smaller font size */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+.back-button:hover {
+    background-color: #777;
+}
+
+.complaints-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.complaint-item {
+    padding: 10px;
+    border-bottom: 1px solid #555; /* Darker border color */
+}
+
+.complaint-item:last-child {
+    border-bottom: none;
+}
+
+.complaint-item p {
+    margin: 5px 0;
+    color: #fff; /* White text color */
+}
+
+.complaint-item strong {
+    font-weight: bold;
+    color: #fff; /* White text color */
+}
