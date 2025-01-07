@@ -1,0 +1,61 @@
+.modify-item-price-container {
+    padding: 20px;
+    background-color: #333; /* Dark background color for the container */
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+    max-width: 800px;
+    color: #fff; /* White text color */
+}
+
+.modify-item-price-container h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #fff; /* White text color */
+}
+
+.back-button {
+    background-color: #555;
+    color: #fff;
+    padding: 5px 10px; /* Smaller padding */
+    font-size: 14px; /* Smaller font size */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+.back-button:hover {
+    background-color: #777;
+}
+
+.item-selection, .price-input {
+    margin-bottom: 20px;
+}
+
+.item-selection label, .price-input label {
+    display: block;
+    margin-bottom: 5px;
+    color: #fff; /* White text color */
+}
+
+.item-selection select, .price-input input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.update-button {
+    background-color: #28a745;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.update-button:hover {
+    background-color: #218838;
+}

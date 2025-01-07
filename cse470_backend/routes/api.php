@@ -10,8 +10,12 @@ use App\Http\Controllers\StaffLeaveController;
 use App\Http\Controllers\StaffComplaintController;
 use App\Http\Controllers\StaffTaskController;
 use App\Http\Controllers\CustomerFavoriteController;
-
-
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\FeedbackController;
+use App\Http\Controllers\CheckComplaintController;
+use App\Http\Controllers\CheckStaffLeaveRequestController;
+use App\Http\Controllers\ModifyPriceController;
+use App\Http\Controllers\SalesController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -60,3 +64,14 @@ Route::get('staff-tasks/{staffId}', [StaffTaskController::class, 'index']);
 Route::get('customer-favorite/{customerId}', [CustomerFavoriteController::class, 'index']);
 Route::post('customer-favorite', [CustomerFavoriteController::class, 'store']);
 Route::delete('customer-favorite/{customerId}/{itemId}', [CustomerFavoriteController::class, 'destroy']);
+Route::post('admin-login', [AdminController::class, 'login']);
+
+Route::get('feedback', [FeedbackController::class, 'index']);
+
+Route::get('check-complaint', [CheckComplaintController::class, 'index']);
+
+Route::get('staff-leave-requests', [CheckStaffLeaveRequestController::class, 'index']);
+
+Route::put('items/{id}/price', [ModifyPriceController::class, 'updatePrice']);
+
+Route::get('total-sales', [SalesController::class, 'getTotalSales']);
